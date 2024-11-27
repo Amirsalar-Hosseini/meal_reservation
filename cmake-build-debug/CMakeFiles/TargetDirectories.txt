@@ -1,0 +1,3 @@
+/home/amirsalar/Desktop/pro/cmake-build-debug/CMakeFiles/cpp.dir
+/home/amirsalar/Desktop/pro/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/amirsalar/Desktop/pro/cmake-build-debug/CMakeFiles/rebuild_cache.dir
