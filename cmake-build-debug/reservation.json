@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "username": "amir",
+    "name": "kabab",
+    "meal_type": "breakfast",
+    "location": "self",
+    "day": "sunday"
+  }
+]
