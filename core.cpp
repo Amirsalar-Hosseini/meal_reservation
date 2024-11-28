@@ -226,9 +226,9 @@ void createStudent(vector<User>& users, const string& filename) {
     cout << "Student created successfully!" << endl;
 }
 
-void createReservation(vector<Reservation>& reservations, const string& filename) {
+void createReservation(vector<Reservation>& reservations, const string& reserveFile, User& me, Meal& meal, vector<User>& users, const string& filename) {
     Reservation newReservation;
-    int maxID;
+    int maxID = 0;
 
     for (const auto& reservation : reservations) {
         if (reservation.id > maxID) {
@@ -237,15 +237,23 @@ void createReservation(vector<Reservation>& reservations, const string& filename
     }
 
     newReservation.id = maxID + 1;
-    newReservation.username = "student"; // me ro biar
-    newReservation.name = "student"; // meal ro biar ba ID yeji bashe
-    newReservation.meal_type = "student"; // meal ro biar ba ID yeji bashe
-    newReservation.location = "student"; // meal ro biar ba ID yeji bashe
-    newReservation.day = "089"; // meal ro biar ba ID yeji bashe
+    newReservation.username = me.username;
+    newReservation.name = meal.name;
+    newReservation.meal_type = meal.meal_type;
+    newReservation.location = meal.location;
+    newReservation.day = meal.day;
+
+    for (auto& user : users) {
+        if (user.username == me.username) {
+            user.balance -= meal.price;
+        }
+    }
+
+    saveUsersToFile(users, filename);
 
     reservations.push_back(newReservation);
 
-    saveReservesToFile(reservations, filename);
+    saveReservesToFile(reservations, reserveFile);
 
     cout << "Reserved successfully!" << endl;
 }
@@ -301,7 +309,7 @@ void deposit(User& me, vector<User>& users, int amount, const string& filename) 
 }
 
 // menu--------------------------------------------
-void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>& meals) {
+void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>& meals, vector<Reservation>& reservations, const string& reserveFile) {
     int choice, amount, meal_id;
     string m, loc, d;
 
@@ -329,7 +337,12 @@ void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>&
             cin >> meal_id;
             for (auto& meal : meals) {
                 if (meal.id == meal_id) {
-                    cout << "jsfhshfshfkhsfh";
+                    if (me.balance >= meal.price) {
+                        createReservation(reservations, reserveFile, me, meal, users, filename);
+                    }
+                    else {
+                        cout << "Error: your balance not enough!" << endl;
+                    }
                 }
             }
 
@@ -386,12 +399,12 @@ int main() {
     vector<Meal> meals = parseMeals(mealData);
     vector<Reservation> reservations = parseReservations(reserveData);
 
-    if (!users.empty()) {
+    if (!users.empty() && !meals.empty() && !reservations.empty()) {
         cout << "Data Loaded" << endl;
     }
     User me = login(users);
     if (me.role == "student") {
-        STmenu(me, users, filename, meals);
+        STmenu(me, users, filename, meals, reservations, reserveFile);
     }
     else if (me.role == "admin") {
         ADmenu(users, filename);
