@@ -3,32 +3,9 @@
         "day": "sunday",
         "id": 1,
         "location": "self",
-        "meal_type": "breakfast",
-        "name": "kabab",
-        "username": "amir"
-    },
-    {
-        "day": "sunday",
-        "id": 31174,
-        "location": "self",
-        "meal_type": "breakfast",
-        "name": "kabab",
-        "username": "amir"
-    },
-    {
-        "day": "sunday",
-        "id": 32642,
-        "location": "self",
         "meal_type": "lunch",
         "name": "rice",
-        "username": "amir"
-    },
-    {
-        "day": "sunday",
-        "id": 32643,
-        "location": "self",
-        "meal_type": "lunch",
-        "name": "rice",
+        "price": 20000,
         "username": "amir"
     }
 ]

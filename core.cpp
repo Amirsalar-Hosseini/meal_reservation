@@ -46,6 +46,7 @@ struct Meal {
 
 struct Reservation {
     int id;
+    int price;
     string username;
     string name;
     string meal_type;
@@ -96,6 +97,7 @@ vector<Reservation> parseReservations(const json& data) {
         Reservation reservation;
         reservation.id = item.at("id");
         reservation.username = item.at("username");
+        reservation.price = item.at("price");
         reservation.name = item.at("name");
         reservation.meal_type = item.at("meal_type");
         reservation.location = item.at("location");
@@ -189,6 +191,7 @@ void saveReservesToFile(const vector<Reservation>& reservations, const string& f
             {"id", reservation.id},
             {"username", reservation.username},
             {"name", reservation.name},
+            {"price", reservation.price},
             {"meal_type", reservation.meal_type},
             {"location", reservation.location},
             {"day", reservation.day}
@@ -240,6 +243,7 @@ void createReservation(vector<Reservation>& reservations, const string& reserveF
     newReservation.username = me.username;
     newReservation.name = meal.name;
     newReservation.meal_type = meal.meal_type;
+    newReservation.price = meal.price;
     newReservation.location = meal.location;
     newReservation.day = meal.day;
 
@@ -292,6 +296,47 @@ void deleteUserFromJSON(const string& username, vector<User>& users, const strin
     }
 }
 
+void deleteReserveFromJSON(const int& id, vector<Reservation>& reservations, const string& reserveFile, vector<User>& users, User& me, const string& filename) {
+    auto it = std::remove_if(reservations.begin(), reservations.end(),
+                             [&id](const Reservation& reservation) {
+                                 return reservation.id == id;
+                             });
+    if (it != reservations.end()) {
+        reservations.erase(it, reservations.end());
+
+        json jsonData = json::array();
+        for (const auto& reservation : reservations) {
+            json userData;
+            userData["day"] = reservation.day;
+            userData["id"] = reservation.id;
+            userData["location"] = reservation.location;
+            userData["price"] = reservation.price;
+            userData["meal_type"] = reservation.meal_type;
+            userData["name"] = reservation.name;
+            userData["username"] = reservation.username;
+            jsonData.push_back(userData);
+        }
+        for (auto& user : users) {
+            if (user.username == me.username) {
+                user.balance += it->price;
+            }
+        }
+
+        saveUsersToFile(users, filename);
+
+        ofstream outFile(reserveFile);
+        if (outFile.is_open()) {
+            outFile << jsonData.dump(4);
+            outFile.close();
+            cout << "Reservation with id '" << id << "' has been deleted from JSON file." << endl;
+        } else {
+            cout << "Error: Could not write to file " << reserveFile << endl;
+        }
+    } else {
+        cout << "No reserve found with id '" << id << "'." << endl;
+    }
+}
+
 // asset--------------------------------------------
 void deposit(User& me, vector<User>& users, int amount, const string& filename) {
     me.balance += amount;
@@ -310,7 +355,7 @@ void deposit(User& me, vector<User>& users, int amount, const string& filename) 
 
 // menu--------------------------------------------
 void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>& meals, vector<Reservation>& reservations, const string& reserveFile) {
-    int choice, amount, meal_id;
+    int choice, amount, meal_id, reserve_id;
     string m, loc, d;
 
     cout << "what do you want?" << endl;
@@ -353,10 +398,25 @@ void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>&
             deposit(me, users, amount, filename);
         break;
         case 3:
-            cout << "List Reservation" << endl;
+            for (auto& reservation : reservations) {
+                if (reservation.username == me.username) {
+                    cout << "day: " << reservation.day << " meal: " << reservation.meal_type <<  " location: " << reservation.location <<  " name: " << reservation.name <<   " price: " << reservation.price << endl;
+                }
+            }
         break;
         case 4:
-            cout << "delete delete Reservation" << endl;
+            for (auto& reservation : reservations) {
+                if (reservation.username == me.username) {
+                    cout << "day: " << reservation.day << " meal: " << reservation.meal_type <<  " location: " << reservation.location <<  " name: " << reservation.name <<   " price: " << reservation.price <<   " id: " << reservation.id << endl;
+                }
+            }
+            cout << "witch one?(id): ";
+            cin >> reserve_id;
+        for (auto& reservation : reservations) {
+            if (reservation.id == reserve_id) {
+                deleteReserveFromJSON(reserve_id, reservations, reserveFile, users, me, filename);
+            }
+        }
         break;
     }
 }
@@ -368,7 +428,6 @@ void ADmenu(vector<User>& users, const string& filename) {
     cout << "what do you want?" << endl;
     cout << "1. add student" << endl;
     cout << "2. delete student" << endl;
-    cout << "3. delete student reserve" << endl;
     cin >> choice;
     switch (choice) {
         case 1:
@@ -378,9 +437,6 @@ void ADmenu(vector<User>& users, const string& filename) {
             cout << "Enter username to delete: ";
             cin >> usr;
             deleteUserFromJSON(usr, users, "users.json");
-        break;
-        case 3:
-            cout << "delete student reserve" << endl;
         break;
     }
 }

@@ -1,12 +1,12 @@
 [
     {
-        "balance": 80000,
+        "balance": 120000,
         "password": "amir",
         "role": "student",
         "username": "amir"
     },
     {
-        "balance": 100000,
+        "balance": 110000,
         "password": "admin",
         "role": "admin",
         "username": "admin"
