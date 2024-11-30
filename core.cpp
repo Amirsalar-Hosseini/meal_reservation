@@ -3,6 +3,9 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 #include <string>
+#include <unistd.h>
+
+// data was added successfully -> users: 1,000, meals: 10,000, reservation: 20,000
 
 using json = nlohmann::json;
 using namespace std;
@@ -355,19 +358,24 @@ void deposit(User& me, vector<User>& users, int amount, const string& filename) 
 
 // menu--------------------------------------------
 void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>& meals, vector<Reservation>& reservations, const string& reserveFile) {
-    int choice, amount, meal_id, reserve_id;
-    string m, loc, d;
+    while (1) {
+        sleep(2);
+        system("clear");
 
-    cout << "what do you want?" << endl;
-    cout << "1. reserve" << endl;
-    cout << "2. Deposit" << endl;
-    cout << "3. List Reservation" << endl;
-    cout << "4. delete Reservation" << endl;
-    cin >> choice;
+        int choice, amount, meal_id, reserve_id;
+        string m, loc, d;
 
-    switch (choice) {
-        case 1:
-            cout << "witch day?: ";
+        cout << "what do you want?" << endl;
+        cout << "1. reserve" << endl;
+        cout << "2. Deposit" << endl;
+        cout << "3. List Reservation" << endl;
+        cout << "4. delete Reservation" << endl;
+        cin >> choice;
+        system("clear");
+
+        switch (choice) {
+            case 1:
+                cout << "witch day?: ";
             cin >> d;
             cout << "witch meal?: ";
             cin >> m;
@@ -391,33 +399,34 @@ void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>&
                 }
             }
 
-        break;
-        case 2:
-            cout << "Enter amount for deposit: ";
+            break;
+            case 2:
+                cout << "Enter amount for deposit: ";
             cin >> amount;
             deposit(me, users, amount, filename);
-        break;
-        case 3:
-            for (auto& reservation : reservations) {
-                if (reservation.username == me.username) {
-                    cout << "day: " << reservation.day << " meal: " << reservation.meal_type <<  " location: " << reservation.location <<  " name: " << reservation.name <<   " price: " << reservation.price << endl;
+            break;
+            case 3:
+                for (auto& reservation : reservations) {
+                    if (reservation.username == me.username) {
+                        cout << "day: " << reservation.day << " meal: " << reservation.meal_type <<  " location: " << reservation.location <<  " name: " << reservation.name <<   " price: " << reservation.price << endl;
+                    }
                 }
-            }
-        break;
-        case 4:
-            for (auto& reservation : reservations) {
-                if (reservation.username == me.username) {
-                    cout << "day: " << reservation.day << " meal: " << reservation.meal_type <<  " location: " << reservation.location <<  " name: " << reservation.name <<   " price: " << reservation.price <<   " id: " << reservation.id << endl;
+            break;
+            case 4:
+                for (auto& reservation : reservations) {
+                    if (reservation.username == me.username) {
+                        cout << "day: " << reservation.day << " meal: " << reservation.meal_type <<  " location: " << reservation.location <<  " name: " << reservation.name <<   " price: " << reservation.price <<   " id: " << reservation.id << endl;
+                    }
                 }
-            }
             cout << "witch one?(id): ";
             cin >> reserve_id;
-        for (auto& reservation : reservations) {
-            if (reservation.id == reserve_id) {
-                deleteReserveFromJSON(reserve_id, reservations, reserveFile, users, me, filename);
+            for (auto& reservation : reservations) {
+                if (reservation.id == reserve_id) {
+                    deleteReserveFromJSON(reserve_id, reservations, reserveFile, users, me, filename);
+                }
             }
+            break;
         }
-        break;
     }
 }
 
