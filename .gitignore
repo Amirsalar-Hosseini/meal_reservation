@@ -33,3 +33,5 @@
 
 # Iditor config
 .idea/
+cmake-build-debug/
+CMakeLists.txt
