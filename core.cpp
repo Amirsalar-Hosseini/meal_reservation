@@ -433,20 +433,21 @@ void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>&
 void ADmenu(vector<User>& users, const string& filename) {
     string usr;
     int choice;
-
-    cout << "what do you want?" << endl;
-    cout << "1. add student" << endl;
-    cout << "2. delete student" << endl;
-    cin >> choice;
-    switch (choice) {
-        case 1:
-            createStudent(users, filename);
-        break;
-        case 2:
-            cout << "Enter username to delete: ";
-            cin >> usr;
-            deleteUserFromJSON(usr, users, "users.json");
-        break;
+    while (true) {
+        cout << "what do you want?" << endl;
+        cout << "1. add student" << endl;
+        cout << "2. delete student" << endl;
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                createStudent(users, filename);
+            break;
+            case 2:
+                cout << "Enter username to delete: ";
+                cin >> usr;
+                deleteUserFromJSON(usr, users, "users.json");
+            break;
+        }
     }
 }
 
