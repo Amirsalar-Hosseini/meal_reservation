@@ -356,6 +356,49 @@ void deposit(User& me, vector<User>& users, int amount, const string& filename) 
     cout << "Balance updated successfully! New balance: " << me.balance << endl;
 }
 
+// CSV-------------------------------------------------
+void writeCSV(const std::string& filename, const json& data) {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Cannot open CSV file!");
+    }
+
+    if (!data.is_array()) {
+        throw std::runtime_error("JSON data is not an array!");
+    }
+
+    if (!data.empty()) {
+        for (auto it = data[0].items().begin(); it != data[0].items().end(); ++it) {
+            file << it.key();
+            if (std::next(it) != data[0].items().end()) {
+                file << ",";
+            }
+        }
+        file << "\n";
+    }
+
+    for (const auto& item : data) {
+        for (auto it = item.items().begin(); it != item.items().end(); ++it) {
+            file << it.value();
+            if (std::next(it) != item.items().end()) {
+                file << ",";
+            }
+        }
+        file << "\n";
+    }
+
+    file.close();
+}
+
+void clearJSON(const std::string& filename) {
+    std::ofstream file(filename, std::ios::trunc); // باز کردن فایل برای نوشتن و پاک کردن محتوای قبلی
+    if (!file.is_open()) {
+        throw std::runtime_error("Cannot open JSON file to clear!");
+    }
+    file << "[]"; // فایل JSON خالی
+    file.close();
+}
+
 // menu--------------------------------------------
 void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>& meals, vector<Reservation>& reservations, const string& reserveFile) {
     while (1) {
@@ -430,13 +473,22 @@ void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>&
     }
 }
 
-void ADmenu(vector<User>& users, const string& filename) {
+void ADmenu(vector<User>& users, const string& filename, vector<Meal>& meals, vector<Reservation>& reservations, const string& reserveFile, const json& data) {
+
     string usr;
     int choice;
+    int meal_id, reserve_id;
+    string m, loc, d;
+    User sel_user;
+    const std::string csvFile = "reservation.csv";
+
     while (true) {
         cout << "what do you want?" << endl;
         cout << "1. add student" << endl;
         cout << "2. delete student" << endl;
+        cout << "3. add reserve student" << endl;
+        cout << "4. delete reserve student" << endl;
+        cout << "5. all reservation data(Exel(CSV))" << endl;
         cin >> choice;
         switch (choice) {
             case 1:
@@ -446,6 +498,74 @@ void ADmenu(vector<User>& users, const string& filename) {
                 cout << "Enter username to delete: ";
                 cin >> usr;
                 deleteUserFromJSON(usr, users, "users.json");
+            break;
+            case 3:
+                cout << "Enter student username: ";
+                cin >> usr;
+
+                for (auto& user : users) {
+                    if (user.username == usr) {
+                        sel_user = user;
+                    }
+                }
+
+                cout << "witch day?: ";
+                cin >> d;
+                cout << "witch meal?: ";
+                cin >> m;
+                cout << "self or buffet?: ";
+                cin >> loc;
+                for (auto& meal : meals) {
+                    if (meal.day == d && meal.location == loc && meal.meal_type == m) {
+                        cout << meal.name << " - price: " << meal.price  << " - id: " << meal.id << endl;
+                    }
+                }
+                cout << "witch one?(id): ";
+                cin >> meal_id;
+                for (auto& meal : meals) {
+                    if (meal.id == meal_id) {
+                        if (sel_user.balance >= meal.price) {
+                            createReservation(reservations, reserveFile, sel_user, meal, users, filename);
+                        }
+                        else {
+                            cout << "Error: student balance not enough!" << endl;
+                        }
+                    }
+                }
+            break;
+            case 4:
+                cout << "Enter student username: ";
+            cin >> usr;
+
+            for (auto& user : users) {
+                if (user.username == usr) {
+                    sel_user = user;
+                }
+            }
+
+            for (auto& reservation : reservations) {
+                if (reservation.username == sel_user.username) {
+                    cout << "day: " << reservation.day << " meal: " << reservation.meal_type <<  " location: " << reservation.location <<  " name: " << reservation.name <<   " price: " << reservation.price <<   " id: " << reservation.id << endl;
+                }
+            }
+            cout << "witch one?(id): ";
+            cin >> reserve_id;
+            for (auto& reservation : reservations) {
+                if (reservation.id == reserve_id) {
+                    deleteReserveFromJSON(reserve_id, reservations, reserveFile, users, sel_user, filename);
+                }
+            }
+            break;
+            case 5:
+                try {
+                    writeCSV(csvFile, data);
+
+                    clearJSON(reserveFile);
+
+                    std::cout << "Data exported to " << csvFile << " and JSON file cleared." << std::endl;
+                } catch (const std::exception& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                }
             break;
         }
     }
@@ -473,7 +593,7 @@ int main() {
         STmenu(me, users, filename, meals, reservations, reserveFile);
     }
     else if (me.role == "admin") {
-        ADmenu(users, filename);
+        ADmenu(users, filename, meals, reservations, reserveFile, reserveData);
     }
     return 0;
 }
