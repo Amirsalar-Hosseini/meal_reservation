@@ -136,4 +136,4 @@ cd meal-reservation
 
 ## راه‌های تماس
 
-در صورت نیاز به پشتیبانی بیشتر، لطفاً از طریق ایمیل یا [GitHub Issues](https://github.com/your-repo/issues) با ما در ارتباط باشید.
+در صورت نیاز به پشتیبانی بیشتر، لطفاً از طریق ایمیل یا [GitHub Issues](https://github.com/Amirsalar-Hosseini/meal_reservation//issues) با ما در ارتباط باشید.
