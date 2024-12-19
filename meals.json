@@ -1,82 +1,122 @@
 [
-  {
-    "id": 1,
-    "day": "tuesday",
-    "name": "fish",
-    "price": 9107,
-    "meal_type": "breakfast",
-    "location": "self"
-  },
-  {
-    "id": 2,
-    "day": "wednesday",
-    "name": "pasta",
-    "price": 35308,
-    "meal_type": "lunch",
-    "location": "buffet"
-  },
-  {
-    "id": 3,
-    "day": "friday",
-    "name": "stew",
-    "price": 40289,
-    "meal_type": "dinner",
-    "location": "buffet"
-  },
-  {
-    "id": 4,
-    "day": "sunday",
-    "name": "salad",
-    "price": 33928,
-    "meal_type": "breakfast",
-    "location": "buffet"
-  },
-  {
-    "id": 5,
-    "day": "saturday",
-    "name": "soup",
-    "price": 12476,
-    "meal_type": "dinner",
-    "location": "self"
-  },
-  {
-    "id": 6,
-    "day": "thursday",
-    "name": "rice",
-    "price": 40744,
-    "meal_type": "breakfast",
-    "location": "self"
-  },
-  {
-    "id": 7,
-    "day": "tuesday",
-    "name": "rice",
-    "price": 39741,
-    "meal_type": "dinner",
-    "location": "buffet"
-  },
-  {
-    "id": 8,
-    "day": "tuesday",
-    "name": "sandwich",
-    "price": 28470,
-    "meal_type": "lunch",
-    "location": "buffet"
-  },
-  {
-    "id": 9,
-    "day": "monday",
-    "name": "pasta",
-    "price": 16210,
-    "meal_type": "dinner",
-    "location": "self"
-  },
-  {
-    "id": 10,
-    "day": "tuesday",
-    "name": "salad",
-    "price": 39855,
-    "meal_type": "lunch",
-    "location": "self"
-  }
+    {
+        "day": "sunday",
+        "id": 1,
+        "location": "buffet",
+        "meal_type": "breakfast",
+        "name": "kalbas",
+        "price": 12000
+    },
+    {
+        "day": "sunday",
+        "id": 2,
+        "location": "buffet",
+        "meal_type": "lunch",
+        "name": "kalbas",
+        "price": 12000
+    },
+    {
+        "day": "sunday",
+        "id": 3,
+        "location": "self",
+        "meal_type": "dinner",
+        "name": "akbar joje",
+        "price": 15000
+    },
+    {
+        "day": "monday",
+        "id": 4,
+        "location": "buffet",
+        "meal_type": "breakfast",
+        "name": "hotdog",
+        "price": 12000
+    },
+    {
+        "day": "monday",
+        "id": 5,
+        "location": "buffet",
+        "meal_type": "lunch",
+        "name": "naget",
+        "price": 12000
+    },
+    {
+        "day": "monday",
+        "id": 6,
+        "location": "buffet",
+        "meal_type": "dinner",
+        "name": "koktel",
+        "price": 12000
+    },
+    {
+        "day": "tuesday",
+        "id": 7,
+        "location": "self",
+        "meal_type": "breakfast",
+        "name": "akbar joje",
+        "price": 15000
+    },
+    {
+        "day": "tuesday",
+        "id": 8,
+        "location": "buffet",
+        "meal_type": "lunch",
+        "name": "hotdog",
+        "price": 12000
+    },
+    {
+        "day": "tuesday",
+        "id": 9,
+        "location": "buffet",
+        "meal_type": "dinner",
+        "name": "hotdog",
+        "price": 12000
+    },
+    {
+        "day": "wednesday",
+        "id": 10,
+        "location": "self",
+        "meal_type": "breakfast",
+        "name": "akbar joje",
+        "price": 15000
+    },
+    {
+        "day": "wednesday",
+        "id": 11,
+        "location": "self",
+        "meal_type": "lunch",
+        "name": "mahi",
+        "price": 15000
+    },
+    {
+        "day": "wednesday",
+        "id": 12,
+        "location": "self",
+        "meal_type": "dinner",
+        "name": "kabab kobide",
+        "price": 15000
+    },
+    {
+        "day": "saturday",
+        "id": 13,
+        "location": "self",
+        "meal_type": "breakfast",
+        "name": "kabab kobide",
+        "price": 15000
+    },
+    {
+        "day": "saturday",
+        "id": 14,
+        "location": "buffet",
+        "meal_type": "lunch",
+        "name": "hotdog",
+        "price": 12000
+    },
+    {
+        "day": "saturday",
+        "id": 15,
+        "location": "buffet",
+        "meal_type": "dinner",
+        "name": "kalbas",
+        "price": 12000
+    }
 ]

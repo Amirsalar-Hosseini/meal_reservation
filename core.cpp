@@ -4,8 +4,11 @@
 #include <vector>
 #include <string>
 #include <unistd.h>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
 
-// data was added successfully -> users: 1,000, meals: 10,000, reservation: 20,000
+// data was added successfully -> users: 1,000, reservation: 20,000
 
 using json = nlohmann::json;
 using namespace std;
@@ -473,7 +476,7 @@ void STmenu(User& me, vector<User>& users, const string& filename, vector<Meal>&
     }
 }
 
-void ADmenu(vector<User>& users, const string& filename, vector<Meal>& meals, vector<Reservation>& reservations, const string& reserveFile, const json& data) {
+void ADmenu(vector<User>& users, const string& filename, vector<Meal>& meals, vector<Reservation>& reservations, const string& reserveFile, const json& data, const string& mealFile) {
 
     string usr;
     int choice;
@@ -561,6 +564,57 @@ void ADmenu(vector<User>& users, const string& filename, vector<Meal>& meals, ve
                     writeCSV(csvFile, data);
 
                     clearJSON(reserveFile);
+                    clearJSON(mealFile);
+
+
+                    std::vector<std::string> daysOfWeek = {"sunday", "monday", "tuesday", "wednesday", "saturday"};
+                    std::vector<std::string> self_food = {"kabab kobide", "qorme", "qeyme", "joje kabab", "mahi", "akbar joje"};
+                    std::vector<std::string> buffet_food = {"kalbas", "chizberger", "kabab loqme", "makaroni", "koktel", "hotdog", "felafel", "naget"};
+                    std::vector<std::string> meals = {"breakfast", "lunch", "dinner"};
+
+                    std::map<std::string, int> food_prices = {
+                        {"kabab kobide", 15000}, {"qorme", 12000}, {"qeyme", 12000}, {"joje kabab", 15000},
+                        {"mahi", 15000}, {"akbar joje", 15000}, {"kalbas", 12000}, {"chizberger", 12000},
+                        {"kabab loqme", 12000}, {"makaroni", 12000}, {"koktel", 12000}, {"hotdog", 12000},
+                        {"felafel", 12000}, {"naget", 12000}
+                    };
+
+                    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+                    json reservations_meals = json::array();
+                    int id_counter = 1;
+
+                    for (const auto& day : daysOfWeek) {
+                        for (const auto& meal : meals) {
+                            bool is_self = std::rand() % 2;
+                            std::string selected_food;
+
+                            if (is_self) {
+                                selected_food = self_food[std::rand() % self_food.size()];
+                            } else {
+                                selected_food = buffet_food[std::rand() % buffet_food.size()];
+                            }
+
+                            json reservation = {
+                                {"id", id_counter++},
+                                {"day", day},
+                                {"name", selected_food},
+                                {"price", food_prices[selected_food]},
+                                {"meal_type", meal},
+                                {"location", is_self ? "self" : "buffet"}
+                            };
+
+                            reservations_meals.push_back(reservation);
+                        }
+                    }
+                    std::ofstream outFile("meals.json");
+                    if (outFile.is_open()) {
+                        outFile << std::setw(4) << reservations_meals << std::endl;
+                        outFile.close();
+                        std::cout << "Reservations saved to 'reservation.json'!" << std::endl;
+                    } else {
+                        std::cerr << "Error: Unable to open file for writing." << std::endl;
+                    }
 
                     std::cout << "Data exported to " << csvFile << " and JSON file cleared." << std::endl;
                 } catch (const std::exception& e) {
@@ -593,7 +647,7 @@ int main() {
         STmenu(me, users, filename, meals, reservations, reserveFile);
     }
     else if (me.role == "admin") {
-        ADmenu(users, filename, meals, reservations, reserveFile, reserveData);
+        ADmenu(users, filename, meals, reservations, reserveFile, reserveData, mealFile);
     }
     return 0;
 }
