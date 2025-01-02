@@ -44,7 +44,7 @@
 ابتدا پروژه را کلون کنید یا فایل‌های آن را دانلود کنید:
 
 ```
-git clone https://github.com/your-repo/meal-reservation.git
+git clone https://github.com/amirsalar-hosseini/meal-reservation.git
 cd meal-reservation
 ```
 
